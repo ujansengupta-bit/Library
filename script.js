@@ -1,14 +1,13 @@
 const myLibrary = [];
 
+let editIndex = null;
+
 function Book(title, author, pages, color) {
   // the constructor...
   this.title = title;
   this.author = author;
   this.pages = pages;
   this.read = color;
-
-  myLibrary.push(this);
-  display(myLibrary);
 }
 
 function display(){
@@ -47,7 +46,7 @@ function display(){
         document.querySelector("#pages").value = book.pages;
 
         let readToggle = document.querySelector(".read");
-        readToggle.style.backgroundColor = `book.read`;
+        readToggle.style.backgroundColor = book.read;
         readToggle.textContent = (book.read === "green") ? "Read" : "Not Read";
       })
 
@@ -77,7 +76,19 @@ function addBookToLibrary() {
   let read_input = document.querySelector(".read");
   
   let bgcolor = read_input.style.backgroundColor;
-  let add = new Book(title_input.value, author_input.value, pages_input.value, bgcolor); 
+  if (editIndex !== null) {
+        myLibrary[editIndex].title = title_input.value;
+        myLibrary[editIndex].author = author_input.value;
+        myLibrary[editIndex].pages = pages_input.value;
+        myLibrary[editIndex].read = bgcolor;
+
+        editIndex = null; 
+    } else {
+        let newBook = new Book(title_input.value, author_input.value, pages_input.value, bgcolor);
+        myLibrary.push(newBook);
+    }
+
+  display(); 
   new_book.style.display = "none";
   title_input.value = "";
   author_input.value = "";
@@ -87,6 +98,7 @@ function addBookToLibrary() {
 
 let book = document.querySelector("#add")
 book.addEventListener("click", function (){
+    editIndex = null;
     let new_book = document.querySelector(".pop_up");
     new_book.style.display = "block";
 })
